@@ -109,7 +109,7 @@ cd Backend
 
 Configure your environment variables:
 
-| Variable | Description |
+| Variable |
 |---|---|
 | DB_USERNAME |
 | DB_PASSWORD |
