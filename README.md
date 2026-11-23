@@ -111,11 +111,10 @@ Configure your environment variables:
 
 | Variable | Description |
 |---|---|
-| DB_USERNAME | MySQL username |
-| DB_PASSWORD | MySQL password |
-| JWT_SECRET | Strong JWT secret key |
+| DB_USERNAME |
+| DB_PASSWORD |
+| JWT_SECRET | 
 
-Configure `src/main/resources/application.properties` to read these environment variables.
 
 Run the Spring Boot application using IntelliJ IDEA or:
 
