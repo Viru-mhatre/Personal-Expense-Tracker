@@ -1,0 +1,70 @@
+
+.edit-transaction-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.edit-transaction-card {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.edit-transaction-card h2 {
+    margin-bottom: 25px;
+}
+
+.edit-transaction-card .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.edit-transaction-card label {
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.edit-transaction-card input,
+.edit-transaction-card select,
+.edit-transaction-card textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+.edit-transaction-card textarea {
+    min-height: 80px;
+}
+
+.edit-transaction-card .form-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.edit-transaction-card .submit-btn,
+.edit-transaction-card .cancel-btn {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.edit-transaction-card .submit-btn {
+    background: #2563eb;
+    color: white;
+}
+
+.edit-transaction-card .cancel-btn {
+    background: #ddd;
+    color: #222;
+}
+
+.edit-transaction-card .error-message {
+    color: red;
+    margin-bottom: 15px;
+}

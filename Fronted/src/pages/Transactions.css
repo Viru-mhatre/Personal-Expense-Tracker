@@ -1,0 +1,256 @@
+
+.transactions-page {
+    padding: 35px;
+    min-height: calc(100vh - 70px);
+}
+
+.transactions-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 28px;
+}
+
+.transactions-heading h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.transactions-heading p {
+    color: #8490a5;
+    font-size: 14px;
+}
+
+.add-transaction-btn {
+    background: #4f46e5;
+    color: white;
+    border: none;
+    padding: 13px 20px;
+    border-radius: 9px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.add-transaction-btn:hover {
+    background: #4338ca;
+}
+
+/* FILTERS */
+
+.transaction-filters {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 14px;
+    background: white;
+    border: 1px solid #e8ecf4;
+    padding: 20px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(31, 45, 80, 0.04);
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #dfe4ee;
+    border-radius: 8px;
+    padding: 0 12px;
+    min-width: 0;
+}
+
+.search-box input {
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    padding: 12px 0;
+    font-size: 13px;
+}
+
+.transaction-filters select {
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #dfe4ee;
+    border-radius: 8px;
+    background: white;
+    color: #334155;
+    outline: none;
+    cursor: pointer;
+}
+
+/* LIST CARD */
+
+.transactions-list-card {
+    background: white;
+    border: 1px solid #e8ecf4;
+    border-radius: 15px;
+    padding: 25px 28px;
+    box-shadow: 0 8px 30px rgba(31, 45, 80, 0.05);
+}
+
+.transactions-list-heading {
+    margin-bottom: 12px;
+}
+
+.transactions-list-heading h2 {
+    font-size: 20px;
+    margin-bottom: 6px;
+}
+
+.transactions-list-heading p {
+    color: #8490a5;
+    font-size: 13px;
+}
+
+/* TRANSACTION ITEMS */
+
+.managed-transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 0;
+    border-bottom: 1px solid #edf0f6;
+}
+
+.managed-transaction-item:last-child {
+    border-bottom: none;
+}
+
+.managed-transaction-details {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.managed-transaction-details h4 {
+    color: #26334d;
+    margin-bottom: 5px;
+}
+
+.managed-transaction-details p {
+    color: #8490a5;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.managed-transaction-details small {
+    color: #9aa3b2;
+    font-size: 12px;
+}
+
+.transaction-icon {
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.income-icon {
+    background: #e7f8ef;
+    color: #16a36a;
+}
+
+.expense-icon {
+    background: #fff0f0;
+    color: #e34d59;
+}
+
+.managed-transaction-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.income-amount {
+    color: #16a36a;
+}
+
+.expense-amount {
+    color: #e34d59;
+}
+
+/* ACTION BUTTONS */
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.action-buttons button {
+    border: none;
+    padding: 9px 15px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.edit-btn {
+    background: #eef0ff;
+    color: #4f46e5;
+}
+
+.edit-btn:hover {
+    background: #dfe3ff;
+}
+
+.delete-btn {
+    background: #fff0f0;
+    color: #e34d59;
+}
+
+.delete-btn:hover {
+    background: #ffe0e0;
+}
+
+/* EMPTY STATE */
+
+
+.transaction-filters {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    gap: 14px;
+    background: white;
+    border: 1px solid #e8ecf4;
+    padding: 20px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(31, 45, 80, 0.04);
+}
+
+.transaction-filters input[type="date"] {
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #dfe4ee;
+    border-radius: 8px;
+    background: white;
+    color: #334155;
+    outline: none;
+    font-size: 13px;
+}
+
+@media (max-width: 900px) {
+    .transaction-filters {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .transaction-filters {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,14 @@
+# Frontend
+Fronted/node_modules/
+Fronted/dist/
+
+# Backend
+Backend/target/
+
+# Environment files
+.env
+.env.*
+
+# Backend credentials
+Backend/src/main/resources/application.properties
+Backend/src/main/resources/application-*.properties
