@@ -277,7 +277,7 @@ BSc Information Technology | Full Stack Developer
 
 ## 📌 GitHub Repository
 
-[Personal Expense Tracker – SETTribe](https://github.com/Viru-mhatre/Personal-Expense-Tracker)
+[Personal Expense Tracker][(https://github.com/Viru-mhatre/Personal-Expense-Tracker)]
 
 ---
 
