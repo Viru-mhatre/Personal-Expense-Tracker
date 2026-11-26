@@ -1,8 +1,60 @@
-# Personal Expense Tracker
+# 💰 Personal Expense Tracker 
 
-A full-stack web application that helps users manage their personal income and expenses. Users can securely register, log in, track transactions, and monitor their financial activities through a dashboard.
+A full-stack **Personal Expense Tracker** web application built using React.js, Spring Boot and MySQL. It helps users manage their daily income and expenses, track their financial balance and view a summary of their financial activities through an interactive dashboard.
 
-## 🚀 Tech Stack
+---
+
+## 🚀 Project Overview
+
+**Personal Expense Tracker** is a full-stack web application designed to simplify personal financial management. Users can securely register, log in, manage transactions, monitor income and expenses, and track their financial activities through a dashboard.
+
+The application features JWT-based authentication, transaction management, form validation and a responsive user interface.
+
+---
+
+## ✨ Features
+
+### 🔐 Authentication & Security
+- User Registration
+- User Login
+- JWT-based authentication
+- Protected routes
+- Secure password handling
+- Login and Registration form validations
+- Show/Hide password functionality
+- Forgot Password functionality
+- Logout functionality
+
+### 📊 Dashboard
+- Dynamic financial dashboard
+- Total Income overview
+- Total Expenses overview
+- Available Balance calculation
+- Total Transaction count
+- Recent transactions
+- Financial summary
+
+### 💸 Transaction Management
+- Add Income and Expense transactions
+- View all transactions
+- Edit existing transactions
+- Delete transactions
+- Transaction categories
+- Transaction descriptions
+- Transaction date management
+- Amount validation
+
+### 🎨 User Interface
+- Responsive UI design
+- Login and Registration pages
+- Dashboard layout
+- Navigation bar
+- Form validation messages
+- Interactive UI elements
+
+---
+
+## 🛠️ Tech Stack
 
 ### Frontend
 - React.js
@@ -10,75 +62,92 @@ A full-stack web application that helps users manage their personal income and e
 - React Router DOM
 - Axios
 - CSS
+- SweetAlert2
+- Lucide React
 
 ### Backend
 - Java 17
 - Spring Boot
+- Spring Security
 - Spring Data JPA
 - Hibernate
-- Spring Security
-- JWT Authentication
+- JWT (JSON Web Token)
+- Maven
 
 ### Database
 - MySQL
 
 ### Tools
 - IntelliJ IDEA
-- Visual Studio Code
+- VS Code
 - Postman
-- Git & GitHub
+- MySQL Workbench
+- Git
+- GitHub
 
-## ✨ Features
+---
 
-### User Authentication
-- User Registration
-- User Login
-- JWT-based Authentication
-- Protected Routes
-- Logout Functionality
-
-### Transaction Management
-- Add Income and Expenses
-- View All Transactions
-- Edit Transactions
-- Delete Transactions
-- Search Transactions
-
-### Transaction Filtering
-- Filter by Transaction Type
-- Filter by Category
-- Filter by Date Range
-
-### Dashboard
-- Display Total Balance
-- Display Total Income
-- Display Total Expenses
-- Display Total Transactions
-- Recent Transactions
-- Income vs Expenses Comparison
-- Expense Category Breakdown
-
-## 📁 Project Structure
+## 🏗️ Project Architecture
 
 ```text
 Personal-Expense-Tracker/
 │
 ├── Backend/
-│   ├── src/
-│   ├── pom.xml
-│   └── mvnw
+│   ├── src/main/java/
+│   │   └── com/settribe/personal_expense_tracker/
+│   │       ├── controller/
+│   │       ├── dto/
+│   │       ├── entity/
+│   │       ├── repository/
+│   │       ├── security/
+│   │       ├── service/
+│   │       └── ...
+│   │
+│   └── pom.xml
 │
 ├── Fronted/
-│   ├── public/
 │   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── App.jsx
+│   │   └── index.css
+│   │
 │   ├── package.json
 │   └── vite.config.js
 │
-├── .gitignore
 └── README.md
 ```
 
-## ⚙️ Installation and Setup
+---
+
+## 📸 Application Modules
+
+### 🔑 Login & Registration
+- User account creation
+- Login authentication
+- Input validations
+- Password visibility toggle
+
+### 🔄 Forgot Password
+- Forgot Password interface
+- Password recovery workflow
+
+### 📈 Dashboard
+- Financial summary
+- Income and expense overview
+- Balance
+- Recent transactions
+
+### 📝 Transactions
+- View transaction records
+- Add new transactions
+- Edit transactions
+- Delete transactions
+
+---
+
+## ⚙️ Installation & Setup
 
 ### 1. Clone the Repository
 
@@ -90,47 +159,30 @@ git clone https://github.com/Viru-mhatre/Personal-Expense-Tracker.git
 cd Personal-Expense-Tracker
 ```
 
-### 2. Database Configuration
+### 2. Backend Setup
 
-- Install and start MySQL Server.
-- Create a database:
-
-```sql
-CREATE DATABASE expense_tracker_db;
-```
-
-### 3. Backend Setup
-
-Open the Backend folder:
+Navigate to the Backend folder:
 
 ```bash
 cd Backend
 ```
 
-Configure your environment variables:
+Configure your MySQL database in `application.properties`.
 
-| Variable |
-|---|---|
-| DB_USERNAME |
-| DB_PASSWORD |
-| JWT_SECRET | 
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/expense_tracker
+spring.datasource.username=root
+spring.datasource.password=your_password
 
-
-Run the Spring Boot application using IntelliJ IDEA or:
-
-```bash
-./mvnw spring-boot:run
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
 ```
 
-Backend runs at:
+Run the Spring Boot application using IntelliJ IDEA or Maven.
 
-```text
-http://localhost:8081
-```
+### 3. Frontend Setup
 
-### 4. Frontend Setup
-
-Open a new terminal in the Fronted folder:
+Navigate to the frontend directory:
 
 ```bash
 cd Fronted
@@ -142,61 +194,91 @@ Install dependencies:
 npm install
 ```
 
-Start the development server:
+Start the frontend:
 
 ```bash
 npm run dev
 ```
 
-Frontend runs at:
+The application will run at:
 
-```text
-http://localhost:5173
-```
+**http://localhost:5173**
 
-## 🔗 API Overview
+---
 
-Base URL:
+## 🔗 Application URLs
 
-```text
-http://localhost:8081/api
-```
+| Component | URL |
+|---|---|
+| Frontend | http://localhost:5173 |
+| Backend | http://localhost:8081 |
+| API Base URL | http://localhost:8081/api |
 
-### Transaction APIs
+---
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/transactions` | Add transaction |
-| GET | `/transactions` | Get all transactions |
-| GET | `/transactions/{id}` | Get transaction by ID |
-| PUT | `/transactions/{id}` | Update transaction |
-| DELETE | `/transactions/{id}` | Delete transaction |
-| GET | `/transactions/summary` | Get transaction summary |
+## 🔒 Authentication
 
-Transaction APIs support filtering using type, category, startDate and endDate query parameters.
+The application uses **JWT (JSON Web Token)** authentication.
 
-## 🔐 Security
+- Users register and log in through the frontend.
+- The backend authenticates user credentials.
+- A JWT token is generated after successful authentication.
+- The frontend stores the authentication token.
+- Axios attaches the token to protected API requests.
+- Spring Security validates the token.
+- Protected routes restrict access to authenticated users.
 
-- JWT-based authentication.
-- Protected frontend routes.
-- Authenticated API requests.
-- User-specific transaction access.
-- Credentials and secret keys should be stored outside GitHub.
+---
 
-## 🧪 API Testing
+## 📡 API Modules
 
-Backend APIs were tested using Postman.
+| Module | Functionality |
+|---|---|
+| Authentication | Register and Login |
+| Password Recovery | Forgot Password workflow |
+| Transactions | CRUD operations |
+| Dashboard | Financial summary |
+| Security | JWT authentication and authorization |
+
+---
+
+## 🎯 Project Objectives
+
+- Develop a full-stack web application.
+- Implement secure authentication using JWT.
+- Perform CRUD operations using Spring Boot and React.
+- Integrate MySQL with Spring Data JPA.
+- Build a responsive frontend using React.
+- Implement REST APIs.
+- Understand frontend-backend integration.
+- Practice Git and GitHub version control.
+
+---
+
+## 🔮 Future Enhancements
+
+- Monthly financial reports
+- Expense charts and analytics
+- Budget planning
+- Download reports as PDF or Excel
+- Category-wise expense analysis
+- Notifications and reminders
+- Deployment to cloud platforms
+
+---
 
 ## 👨‍💻 Developer
 
 **Viraj Mhatre**
 
-GitHub: [Viru-mhatre](https://github.com/Viru-mhatre)
-
-## 📌 Project Status
-
-Core frontend and backend functionality has been implemented. Final testing and improvements are ongoing.
+BSc Information Technology | Full Stack Developer
 
 ---
 
-⭐ If you find this project useful, feel free to explore the repository!
+## 📌 GitHub Repository
+
+[Personal Expense Tracker][(https://github.com/Viru-mhatre/Personal-Expense-Tracker)]
+
+---
+
+⭐ If you find this project interesting, feel free to explore the repository!
