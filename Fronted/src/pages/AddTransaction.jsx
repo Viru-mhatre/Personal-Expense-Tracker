@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/API";
+import Swal from "sweetalert2";
 import "./AddTransaction.css";
 
 function AddTransaction() {
@@ -9,7 +10,7 @@ function AddTransaction() {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
-        type: "EXPENSE",
+        type: "",
         category: "",
         amount: "",
         description: "",
@@ -17,7 +18,63 @@ function AddTransaction() {
     });
 
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const [errors, setErrors] = useState({});
+    const [touched, setTouched] = useState({});
+
+    // Validate individual fields
+    const validateField = (name, value) => {
+
+        switch (name) {
+
+            case "type":
+                return value ? "" : "Please select a transaction type.";
+
+            case "amount":
+                if (!value || value.trim() === "") {
+                    return "Please enter an amount.";
+                }
+
+                if (!Number.isFinite(Number(value)) || Number(value) <= 0) {
+                    return "Amount must be greater than 0.";
+                }
+
+                return "";
+
+            case "category":
+                return value ? "" : "Please select a category.";
+
+            case "description":
+                return value.trim() === ""
+                    ? "Please enter a transaction description."
+                    : "";
+
+            case "transactionDate":
+                return value ? "" : "Please select a transaction date.";
+
+            default:
+                return "";
+        }
+    };
+
+    // Validate entire form
+    const validateForm = () => {
+
+        const newErrors = {};
+
+        Object.keys(formData).forEach((field) => {
+
+            const error = validateField(field, formData[field]);
+
+            if (error) {
+                newErrors[field] = error;
+            }
+
+        });
+
+        setErrors(newErrors);
+
+        return Object.keys(newErrors).length === 0;
+    };
 
     // Handle input changes
     const handleChange = (e) => {
@@ -28,6 +85,34 @@ function AddTransaction() {
             ...prevData,
             [name]: value
         }));
+
+        // Validate field if user has already interacted with it
+        if (touched[name]) {
+
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                [name]: validateField(name, value)
+            }));
+
+        }
+
+    };
+
+    // Handle blur
+    const handleBlur = (e) => {
+
+        const { name, value } = e.target;
+
+        setTouched((prevTouched) => ({
+            ...prevTouched,
+            [name]: true
+        }));
+
+        setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: validateField(name, value)
+        }));
+
     };
 
     // Submit transaction
@@ -35,17 +120,17 @@ function AddTransaction() {
 
         e.preventDefault();
 
-        setError("");
+        // Mark all fields as touched
+        setTouched({
+            type: true,
+            amount: true,
+            category: true,
+            description: true,
+            transactionDate: true
+        });
 
-        // Validate amount
-        if (!formData.amount || Number(formData.amount) <= 0) {
-            setError("Amount must be greater than zero.");
-            return;
-        }
-
-        // Validate category
-        if (!formData.category) {
-            setError("Please select a category.");
+        // Validate all fields
+        if (!validateForm()) {
             return;
         }
 
@@ -57,7 +142,7 @@ function AddTransaction() {
                 type: formData.type,
                 category: formData.category,
                 amount: Number(formData.amount),
-                description: formData.description,
+                description: formData.description.trim(),
                 transactionDate: formData.transactionDate
             };
 
@@ -71,28 +156,35 @@ function AddTransaction() {
 
             console.log("Transaction Added:", response.data);
 
-            alert("Transaction added successfully!");
+            await Swal.fire({
+                icon: "success",
+                title: "Transaction Added!",
+                text: "Your transaction has been added successfully.",
+                confirmButtonColor: "#4f46e5"
+            });
 
-            // Redirect to transactions page
             navigate("/transactions");
 
         } catch (err) {
 
             console.error("Full Error:", err);
-
             console.log("Status:", err.response?.status);
-
             console.log("Response Data:", err.response?.data);
 
-            setError(
+            const errorMessage =
                 err.response?.data?.message ||
                 err.response?.data?.error ||
                 (typeof err.response?.data === "string"
                     ? err.response.data
                     : null) ||
-                err.message ||
-                "Failed to add transaction."
-            );
+                "Failed to add transaction.";
+
+            await Swal.fire({
+                icon: "error",
+                title: "Transaction Failed!",
+                text: errorMessage,
+                confirmButtonColor: "#4f46e5"
+            });
 
         } finally {
 
@@ -113,14 +205,7 @@ function AddTransaction() {
                     Record your income and expenses
                 </p>
 
-                {/* Error Message */}
-                {error && (
-                    <div className="error-message">
-                        {error}
-                    </div>
-                )}
-
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} noValidate>
 
                     {/* Transaction Type */}
                     <div className="form-group">
@@ -131,11 +216,22 @@ function AddTransaction() {
                             name="type"
                             value={formData.type}
                             onChange={handleChange}
-                            required
+                            onBlur={handleBlur}
+                            className={errors.type ? "input-error" : ""}
                         >
+                            <option value="" disabled>
+                                --Select Type--
+                            </option>
+
                             <option value="EXPENSE">Expense</option>
                             <option value="INCOME">Income</option>
                         </select>
+
+                        {errors.type && (
+                            <small className="field-error">
+                                {errors.type}
+                            </small>
+                        )}
 
                     </div>
 
@@ -150,10 +246,17 @@ function AddTransaction() {
                             placeholder="Enter amount"
                             value={formData.amount}
                             onChange={handleChange}
+                            onBlur={handleBlur}
                             min="0.01"
                             step="0.01"
-                            required
+                            className={errors.amount ? "input-error" : ""}
                         />
+
+                        {errors.amount && (
+                            <small className="field-error">
+                                {errors.amount}
+                            </small>
+                        )}
 
                     </div>
 
@@ -166,9 +269,12 @@ function AddTransaction() {
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
-                            required
+                            onBlur={handleBlur}
+                            className={errors.category ? "input-error" : ""}
                         >
-                            <option value="">Select Category</option>
+                            <option value="" disabled>
+                                --Select Category--
+                            </option>
 
                             <option value="Food">Food</option>
                             <option value="Salary">Salary</option>
@@ -182,6 +288,12 @@ function AddTransaction() {
 
                         </select>
 
+                        {errors.category && (
+                            <small className="field-error">
+                                {errors.category}
+                            </small>
+                        )}
+
                     </div>
 
                     {/* Description */}
@@ -194,8 +306,16 @@ function AddTransaction() {
                             placeholder="Enter transaction description"
                             value={formData.description}
                             onChange={handleChange}
+                            onBlur={handleBlur}
                             rows="3"
+                            className={errors.description ? "input-error" : ""}
                         />
+
+                        {errors.description && (
+                            <small className="field-error">
+                                {errors.description}
+                            </small>
+                        )}
 
                     </div>
 
@@ -209,8 +329,15 @@ function AddTransaction() {
                             name="transactionDate"
                             value={formData.transactionDate}
                             onChange={handleChange}
-                            required
+                            onBlur={handleBlur}
+                            className={errors.transactionDate ? "input-error" : ""}
                         />
+
+                        {errors.transactionDate && (
+                            <small className="field-error">
+                                {errors.transactionDate}
+                            </small>
+                        )}
 
                     </div>
 
@@ -240,7 +367,6 @@ function AddTransaction() {
             </div>
 
         </div>
-
     );
 }
 

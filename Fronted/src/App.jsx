@@ -7,7 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
 import AddTransaction from "./pages/AddTransaction";
 import EditTransaction from "./pages/EditTransaction";
-
+import ForgotPassword from "./pages/ForgotPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -21,6 +21,8 @@ function App() {
 
                 <Route path="/register" element={<Register />} />
 
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+
                 {/* Protected Routes */}
                 <Route element={<ProtectedRoute />}>
 
@@ -31,6 +33,8 @@ function App() {
                     <Route path="/add-transaction" element={<AddTransaction />} />
 
                     <Route path="/edit-transaction/:id" element={<EditTransaction />}/>
+
+                    
 
                 </Route>
 

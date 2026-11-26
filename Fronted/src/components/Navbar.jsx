@@ -1,19 +1,17 @@
-
 import { useNavigate, NavLink } from "react-router-dom";
-import { logoutUser } from "../services/AuthService";
 
 function Navbar() {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        logoutUser();
-        navigate("/login", { replace: true });
+        localStorage.removeItem("token");
+        navigate("/login");
     };
 
     return (
         <nav className="navbar">
             <h2 onClick={() => navigate("/dashboard")}>
-               Personal Expense Tracker
+                Personal Expense Tracker
             </h2>
 
             <div className="navbar-links">

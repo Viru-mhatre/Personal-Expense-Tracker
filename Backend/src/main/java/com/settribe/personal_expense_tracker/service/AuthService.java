@@ -66,6 +66,29 @@ public class AuthService {
         );
     }
 
+
+    // CHECK REGISTERED EMAIL
+    public boolean checkEmail(String email) {
+
+        return userRepository.existsByEmail(email);
+    }
+
+    // RESET PASSWORD
+    public String resetPassword(String email, String newPassword) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Email not registered"));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+        userRepository.save(user);
+
+        return "Password reset successfully";
+    }
+
+
     // USER LOGIN
     public AuthResponse login(LoginRequest request) {
 

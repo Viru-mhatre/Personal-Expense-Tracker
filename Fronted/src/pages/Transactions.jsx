@@ -3,13 +3,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import api from "../services/API";
+import Swal from "sweetalert2";
 import "./Transactions.css";
 
 function Transactions() {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-
     const [search, setSearch] = useState("");
     const [typeFilter, setTypeFilter] = useState("ALL");
     const [categoryFilter, setCategoryFilter] = useState("ALL");
@@ -18,6 +18,7 @@ function Transactions() {
 
     const navigate = useNavigate();
 
+    // Fetch transactions
     useEffect(() => {
         fetchTransactions();
     }, [startDate, endDate]);
@@ -43,12 +44,14 @@ function Transactions() {
         }
     };
 
+    // Format amount
     const formatAmount = (amount) =>
         `₹${Number(amount || 0).toLocaleString("en-IN", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         })}`;
 
+    // Categories
     const categories = [
         ...new Set(
             transactions
@@ -57,15 +60,17 @@ function Transactions() {
         )
     ].sort();
 
+    // Filter transactions
     const filteredTransactions = useMemo(() => {
         let result = [...transactions];
 
         if (search.trim()) {
             const searchText = search.toLowerCase();
 
-            result = result.filter((transaction) =>
-                transaction.category?.toLowerCase().includes(searchText) ||
-                transaction.description?.toLowerCase().includes(searchText)
+            result = result.filter(
+                (transaction) =>
+                    transaction.category?.toLowerCase().includes(searchText) ||
+                    transaction.description?.toLowerCase().includes(searchText)
             );
         }
 
@@ -84,12 +89,21 @@ function Transactions() {
         return result;
     }, [transactions, search, typeFilter, categoryFilter]);
 
+    // Delete transaction with SweetAlert2
     const handleDelete = async (id) => {
-        const confirmDelete = window.confirm(
-            "Are you sure you want to delete this transaction?"
-        );
+        const confirmDelete = await Swal.fire({
+            icon: "warning",
+            title: "Are you sure?",
+            text: "You won't be able to recover this transaction!",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Delete!",
+            cancelButtonText: "Cancel",
+            confirmButtonColor: "#e34d59",
+            cancelButtonColor: "#6b7280",
+            reverseButtons: true
+        });
 
-        if (!confirmDelete) return;
+        if (!confirmDelete.isConfirmed) return;
 
         try {
             await api.delete(`/transactions/${id}`);
@@ -97,12 +111,28 @@ function Transactions() {
             setTransactions((previous) =>
                 previous.filter((transaction) => transaction.id !== id)
             );
+
+            await Swal.fire({
+                icon: "success",
+                title: "Deleted!",
+                text: "Transaction deleted successfully.",
+                confirmButtonColor: "#4f46e5"
+            });
         } catch (err) {
             console.error(err);
-            alert("Failed to delete transaction.");
+
+            Swal.fire({
+                icon: "error",
+                title: "Delete Failed!",
+                text:
+                    err.response?.data?.message ||
+                    "Failed to delete transaction.",
+                confirmButtonColor: "#4f46e5"
+            });
         }
     };
 
+    // Clear filters
     const clearFilters = () => {
         setSearch("");
         setTypeFilter("ALL");
@@ -112,36 +142,40 @@ function Transactions() {
     };
 
     return (
-        <div>
+        <>
             <Navbar />
 
-            <main className="transactions-page">
+            <div className="transactions-page">
 
-                <div className="transactions-heading">
+                {/* Header */}
+                <div className="transactions-header">
                     <div>
                         <h1>All Transactions</h1>
-                        <p>Track and manage your income and expenses.</p>
+                        <p>View and manage your income and expenses.</p>
                     </div>
 
                     
                 </div>
 
-                {error && <p className="error">{error}</p>}
-
-                {/* FILTER SECTION */}
-
-                <section className="transaction-filters">
-
-                    <div className="search-box">
-                        <span>🔍</span>
-                        <input
-                            type="text"
-                            placeholder="Search category or description..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
+                {/* Error */}
+                {error && (
+                    <div className="error-message">
+                        {error}
                     </div>
+                )}
 
+                {/* Filters */}
+                <div className="transaction-filters">
+
+                    {/* Search */}
+                    <input
+                        type="text"
+                        placeholder="Search category or description..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+
+                    {/* Type Filter */}
                     <select
                         value={typeFilter}
                         onChange={(e) => setTypeFilter(e.target.value)}
@@ -151,9 +185,12 @@ function Transactions() {
                         <option value="EXPENSE">Expense</option>
                     </select>
 
+                    {/* Category Filter */}
                     <select
                         value={categoryFilter}
-                        onChange={(e) => setCategoryFilter(e.target.value)}
+                        onChange={(e) =>
+                            setCategoryFilter(e.target.value)
+                        }
                     >
                         <option value="ALL">All Categories</option>
 
@@ -164,133 +201,112 @@ function Transactions() {
                         ))}
                     </select>
 
+                    {/* Start Date */}
                     <input
                         type="date"
                         value={startDate}
-                        max={endDate || undefined}
                         onChange={(e) => setStartDate(e.target.value)}
-                        aria-label="Start Date"
-                        title="Start Date"
                     />
 
+                    {/* End Date */}
                     <input
                         type="date"
                         value={endDate}
-                        min={startDate || undefined}
                         onChange={(e) => setEndDate(e.target.value)}
-                        aria-label="End Date"
-                        title="End Date"
                     />
 
-                </section>
+                    {/* Clear Filters */}
+                    <button
+                        className="clear-filter-btn"
+                        onClick={clearFilters}
+                    >
+                        Clear Filters
+                    </button>
+                </div>
 
-                {/* TRANSACTION LIST */}
-
-                <section className="transactions-list-card">
-
-                    <div className="transactions-list-heading">
-                        <div>
-                            <h2>Transaction History</h2>
-                            <p>
-                                {filteredTransactions.length} transaction(s) found
-                            </p>
-                        </div>
-                    </div>
+                {/* Transactions List */}
+                <div className="transactions-list">
 
                     {loading ? (
-                        <p className="transaction-message">
+                        <div className="loading-message">
                             Loading transactions...
-                        </p>
+                        </div>
                     ) : filteredTransactions.length === 0 ? (
-                        <div className="transaction-empty">
-                            <span>🧾</span>
-                            <h3>No transactions found</h3>
-                            <p>Try changing your search or filters.</p>
-
-                            <button onClick={clearFilters}>
-                                Clear Filters
-                            </button>
+                        <div className="empty-message">
+                            <h3>No Transactions Found</h3>
+                            <p>
+                                Try changing your filters or add a new transaction.
+                            </p>
                         </div>
                     ) : (
-                        <div className="transaction-list">
+                        filteredTransactions.map((transaction) => (
+                            <div
+                                className="transaction-card"
+                                key={transaction.id}
+                            >
+                                <div className="transaction-info">
+                                    <h3>
+                                        {transaction.category}
+                                    </h3>
 
-                            {filteredTransactions.map((transaction) => (
-                                <div
-                                    className="managed-transaction-item"
-                                    key={transaction.id}
-                                >
+                                    <p>
+                                        {transaction.description ||
+                                            "No description"}
+                                    </p>
 
-                                    <div className="managed-transaction-details">
-
-                                        <div className={
-                                            transaction.type === "INCOME"
-                                                ? "transaction-icon income-icon"
-                                                : "transaction-icon expense-icon"
-                                        }>
-                                            {transaction.type === "INCOME" ? "↙" : "↗"}
-                                        </div>
-
-                                        <div>
-                                            <h4>{transaction.category}</h4>
-
-                                            <p>
-                                                {transaction.description || "No description"}
-                                            </p>
-
-                                            <small>
-                                                {transaction.transactionDate}
-                                            </small>
-                                        </div>
-
-                                    </div>
-
-                                    <div className="managed-transaction-actions">
-
-                                        <h4 className={
-                                            transaction.type === "INCOME"
-                                                ? "income-amount"
-                                                : "expense-amount"
-                                        }>
-                                            {transaction.type === "INCOME" ? "+" : "-"}
-                                            {formatAmount(transaction.amount)}
-                                        </h4>
-
-                                        <div className="action-buttons">
-
-                                            <button
-                                                className="edit-btn"
-                                                onClick={() =>
-                                                    navigate(
-                                                        `/edit-transaction/${transaction.id}`
-                                                    )
-                                                }
-                                            >
-                                                Edit
-                                            </button>
-
-                                            <button
-                                                className="delete-btn"
-                                                onClick={() =>
-                                                    handleDelete(transaction.id)
-                                                }
-                                            >
-                                                Delete
-                                            </button>
-
-                                        </div>
-
-                                    </div>
-
+                                    <span className="transaction-date">
+                                        {transaction.transactionDate}
+                                    </span>
                                 </div>
-                            ))}
 
-                        </div>
+                                <div className="transaction-right">
+                                    <div
+                                        className={`transaction-amount ${
+                                            transaction.type === "INCOME"
+                                                ? "income"
+                                                : "expense"
+                                        }`}
+                                    >
+                                        {transaction.type === "INCOME"
+                                            ? "+"
+                                            : "-"}
+                                        {formatAmount(transaction.amount)}
+                                    </div>
+
+                                    <div className="transaction-actions">
+
+                                        {/* Edit Button */}
+                                        <button
+                                            className="edit-btn"
+                                            onClick={() =>
+                                                navigate(
+                                                    `/edit-transaction/${transaction.id}`
+                                                )
+                                            }
+                                        >
+                                            Edit
+                                        </button>
+
+                                        {/* Delete Button */}
+                                        <button
+                                            className="delete-btn"
+                                            onClick={() =>
+                                                handleDelete(transaction.id)
+                                            }
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        ))
                     )}
 
-                </section>
+                </div>
 
-            </main>
-        </div>
+            </div>
+        </>
     );
 }
 

@@ -3,6 +3,8 @@ package com.settribe.personal_expense_tracker.controller;
 import com.settribe.personal_expense_tracker.dto.AuthResponse;
 import com.settribe.personal_expense_tracker.dto.LoginRequest;
 import com.settribe.personal_expense_tracker.dto.RegisterRequest;
+import com.settribe.personal_expense_tracker.dto.EmailRequest;
+import com.settribe.personal_expense_tracker.dto.PasswordRequest;
 
 import com.settribe.personal_expense_tracker.service.AuthService;
 
@@ -33,6 +35,33 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
+    }
+
+    // CHECK EMAIL API
+    @PostMapping("/check-email")
+    public ResponseEntity<?> checkEmail(
+            @RequestBody EmailRequest request) {
+
+        boolean exists = authService.checkEmail(request.getEmail());
+
+        if (exists) {
+            return ResponseEntity.ok("Email registered");
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Email not registered");
+    }
+
+    // RESET PASSWORD API
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(
+            @RequestBody PasswordRequest request) {
+
+        String response = authService.resetPassword(
+                request.getEmail(),
+                request.getNewPassword());
+
+        return ResponseEntity.ok(response);
     }
 
     // LOGIN API
