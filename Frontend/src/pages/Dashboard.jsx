@@ -48,7 +48,7 @@ useEffect(() => {
     if (isNewUser === "true" || !hasVisited) {
 
         setWelcomeMessage(
-            "Welcome Sir! Here's your financial summary."
+            "Welcome! Here's your financial summary."
         );
 
         localStorage.setItem(visitedKey, "true");
