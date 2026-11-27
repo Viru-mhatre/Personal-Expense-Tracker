@@ -10,4 +10,3 @@ Backend/target/
 .env.*
 
 # Backend credentials
-Backend/src/main/resources/application-*.properties
