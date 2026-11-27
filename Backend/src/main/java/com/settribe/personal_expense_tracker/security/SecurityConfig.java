@@ -16,6 +16,7 @@ import java.util.List;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import jakarta.servlet.DispatcherType;
 
 @Configuration
 public class SecurityConfig {
@@ -48,8 +49,8 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
 
-                        // PUBLIC APIs
                         .requestMatchers(
                                 "/api/auth/register",
                                 "/api/auth/login",
@@ -57,7 +58,6 @@ public class SecurityConfig {
                                 "/api/auth/reset-password"
                         ).permitAll()
 
-                        // PROTECTED APIs
                         .anyRequest().authenticated()
                 )
 
